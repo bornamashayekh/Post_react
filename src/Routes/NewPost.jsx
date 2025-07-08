@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import classes from './NewPost.module.css';
-
-
-function NewPost({ onAddPost, onCancel}) {
+import Modal from '../components/Modal';
+import { Link } from 'react-router-dom';
+function NewPost({ onAddPost}) {
   const [enteredBody, setEnteredBody] = useState(""); // Importing useState to manage state, but not using it here
   const [enteredAuthor, setEnteredAuthor] = useState("");
   function bodyChangeHandler(event) {
@@ -21,6 +21,7 @@ function NewPost({ onAddPost, onCancel}) {
     onCancel();
   }
   return (
+    <Modal>
     <form className={classes.form} onSubmit={submitHandler}>
       <p>
         <label htmlFor="body">Text</label>
@@ -33,10 +34,11 @@ function NewPost({ onAddPost, onCancel}) {
       </p>
       <p className={classes.actions}>
   
-        <button type="button" onClick={onCancel}>Cancel</button>
+        <Link type="button" to="..">Cancel</Link>
         <button type="submit">Add Post</button>
       </p>
-    </form>
+      </form>
+      </Modal>
   );
 }
 
