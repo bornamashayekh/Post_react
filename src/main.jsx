@@ -1,11 +1,13 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import Posts , {loader as PostLoader} from "./Routes/Posts";
+import Posts, { loader as PostLoader } from "./Routes/Posts";
 import "./index.css";
+import "./App.css";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
-import NewPost from "./Routes/NewPost";
+import NewPost , {action as newPostAction} from "./Routes/NewPost";
 import Post from "./components/Post";
 import RootLayout from "./Routes/RootLayout";
+
 const router = createBrowserRouter([
   {
     path: "/",
@@ -14,13 +16,14 @@ const router = createBrowserRouter([
       {
         path: "/",
         element: <Posts />,
-        loader: PostLoader, // Placeholder for loader function
-        children: [{ path: "/new", element: <NewPost /> }],
+        loader: PostLoader,
+        children: [{ path: "/new", element: <NewPost /> , action:newPostAction}],
       },
     ],
   },
-  { path: "/postLists", element: <Post /> },
+
 ]);
+
 ReactDOM.createRoot(document.getElementById("root")).render(
   // <React.StrictMode>
   <RouterProvider router={router} />

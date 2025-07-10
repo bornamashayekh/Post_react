@@ -1,45 +1,44 @@
-import { useState } from 'react';
+
 import classes from './NewPost.module.css';
 import Modal from '../components/Modal';
-import { Link } from 'react-router-dom';
+import { Link , Form ,redirect} from 'react-router-dom';
 function NewPost({ onAddPost}) {
-  const [enteredBody, setEnteredBody] = useState(""); // Importing useState to manage state, but not using it here
-  const [enteredAuthor, setEnteredAuthor] = useState("");
-  function bodyChangeHandler(event) {
-    setEnteredBody(event.target.value);
-  }
-  function authorChangeHandler(event) {
-    setEnteredAuthor(event.target.value);
-  }
-  function submitHandler(event) {
-    event.preventDefault();
-    const postData = {
-      body: enteredBody,
-      author: enteredAuthor,
-    };
-    onAddPost(postData);
-    onCancel();
-  }
+
   return (
     <Modal>
-    <form className={classes.form} onSubmit={submitHandler}>
+    <Form method="post" className={classes.form} >
       <p>
         <label htmlFor="body">Text</label>
-        <textarea id="body" required rows={3} onChange={bodyChangeHandler}/>
+        <textarea id="body" required rows={3} name='body'/>
           </p>
           
       <p>
         <label htmlFor="name" >Your name</label>
-        <input type="text" id="name" required onChange={authorChangeHandler} />
+        <input type="text" id="name" required name='author'  />
       </p>
       <p className={classes.actions}>
   
         <Link type="button" to="..">Cancel</Link>
         <button type="submit">Add Post</button>
       </p>
-      </form>
+      </Form>
       </Modal>
   );
 }
 
 export default NewPost;
+
+export async function action({ request }) {
+  const formData = await request.formData();
+  const postData = Object.fromEntries(formData);//this add all the form data to an object like this {body: '...', author: '...'}
+  // formData.get('body');
+  // formData.get('author');
+   await fetch('http://localhost:8080/posts', { 
+     method: 'POST',
+     headers: {
+       'Content-Type': 'application/json',
+     },
+    body: JSON.stringify(postData), //convert the object to a string
+  });
+return redirect('/'); //redirect to the posts page after adding the post
+  }
